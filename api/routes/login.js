@@ -12,7 +12,7 @@ router.post('/', function(req, res, next) {
       role: 'admin'
     }, {
       email: 'John',
-      password: 'password',
+      password: 'pass',
       role: 'member'
     }
   ];
@@ -23,8 +23,6 @@ router.post('/', function(req, res, next) {
   // Read username and password from request body
   const { email, password } = req.body;
 
-  console.log(req)
-
   // Filter user from the users array by username and password
   const user = users.find(u => { return u.email === email && u.password === password });
 
@@ -33,7 +31,9 @@ router.post('/', function(req, res, next) {
     const accessToken = jwt.sign({ username: user.email,  role: user.role }, accessTokenSecret);
 
     res.json({
-      accessToken
+      accessToken: accessToken,
+      email: user.email,
+      role: user.role
     });
   } else {
     res.status(403);

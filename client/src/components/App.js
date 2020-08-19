@@ -1,15 +1,26 @@
 import React from 'react';
-// import logo from './logo.svg';
 import '../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header.js'
+import Login from "./Login";
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "" };
+    this.state = {
+      apiResponse: "",
+      username: "",
+      userRole: ""
+    };
     this.callAPI();
+  }
+
+  handleUserLogin(data){
+    this.setState({
+      username: data.username,
+      userRole: data.userRole
+    })
   }
 
   callAPI() {
@@ -19,11 +30,18 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-        <div>
-          <Header/>
-        </div>
-    );
+    const jwt = localStorage.getItem('jwt')
+    if(!jwt){
+      return (
+          <Login App = {this}/>
+          )
+    } else {
+      return (
+          <div>
+            <Header username = {this.state.username} role = {this.state.userRole}/>
+          </div>
+      );
+    }
   }
 }
 

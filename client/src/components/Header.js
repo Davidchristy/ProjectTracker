@@ -1,8 +1,20 @@
 import React from 'react';
-import {Navbar, Nav, NavDropdown} from 'react-bootstrap';
-import Login from "./Login";
+import {Navbar, Nav, Button} from 'react-bootstrap';
 
 class Header extends React.Component {
+    generateAdminLinks(){
+        if (this.props.role === "admin"){
+            return (<Nav.Link href="#admin">Admin</Nav.Link>)}
+        else{
+            return ''
+        }
+    }
+
+    logOff(){
+        localStorage.removeItem('jwt')
+        //Refreshing here to avoid potential security flaws
+        window.location.reload(false);
+    }
     render() {
         return (
             <Navbar bg="primary" expand="lg">
@@ -12,15 +24,15 @@ class Header extends React.Component {
                     <Nav className="mr-auto">
                         <Nav.Link href="#home">Home</Nav.Link>
                         <Nav.Link href="#link">Link</Nav.Link>
-                        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>
+                        {this.generateAdminLinks()}
                     </Nav>
-                    <Login/>
+                </Navbar.Collapse>
+                <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
+                        {/*TODO: Make this a link to a profile page later*/}
+                        Signed in as: <span>{this.props.username}</span>
+                    </Navbar.Text>
+                    <Button variant="secondary" onClick={() => this.logOff()}>Log Off</Button>
                 </Navbar.Collapse>
             </Navbar>
         );
