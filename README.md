@@ -1,12 +1,12 @@
 # ProjectTracker
 A Project tracker system allowing you to track different stages.
 
-In realitoty this is a project I'm doing to help me learn
+In reality this is a project I'm doing to help me learn
 Node and React. I'm hoping what I build here can also be used 
 in a few other projects I've been thinking about but should 
 start somewhere. If you find this let me know what you think.  
 
-#Functional Spec  (TODO) 
+# Functional Spec  (TODO) 
 * Log in system
     * Create new accounts
     * Encrypt password
@@ -26,21 +26,23 @@ start somewhere. If you find this let me know what you think.
 * Separate out necessary data with data that should be made
  by each user, so we can blow this out to allow other 
  instances to be made.
+ 
+ * 404 Page
 
-#Timeline
+# Timeline
 
-#####08/17/20-08/23/19: 
+##### 08/17/20-08/23/19: 
 * Log in system
     * REST API for interaction
     * Bootstrap3 for UI
     * MySQL starter design
     
-#####08/24/20-08/30/19:
+##### 08/24/20-08/30/19:
 * Todo List to choose from
     * Build out different todo card types 
 * Kanban Board designed
 
-#####08/31/20-08/6/19:
+##### 08/31/20-08/6/19:
 * Sprint board
 * Push Data Out
 
