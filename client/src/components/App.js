@@ -13,7 +13,6 @@ class App extends React.Component {
       username: "",
       userRole: ""
     };
-    this.callAPI();
   }
 
   handleUserLogin(data){
@@ -23,13 +22,8 @@ class App extends React.Component {
     })
   }
 
-  callAPI() {
-    fetch("http://localhost:9000/testAPI")
-        .then(res => res.text())
-        .then(res => this.setState({ apiResponse: res }));
-  }
-
   render() {
+
     const jwt = localStorage.getItem('jwt')
     if(!jwt){
       return (
@@ -39,7 +33,9 @@ class App extends React.Component {
       return (
           <div>
             <Header username = {this.state.username} role = {this.state.userRole}/>
+            <img src="https://www.pinclipart.com/picdir/middle/98-982775_counseling-center-work-under-construction-clipart.png"/>
           </div>
+
       );
     }
   }

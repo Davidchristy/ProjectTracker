@@ -1,3 +1,4 @@
+//TODO: Change these to let or const
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,8 +7,8 @@ var logger = require('morgan');
 var cors = require("cors");
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/login');
-var testAPIRouter = require("./routes/testAPI");
+var loginRouter = require('./routes/login');
+var createAccountRouter = require('./routes/createAccount');
 var app = express();
 
 // view engine setup
@@ -22,8 +23,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/auth/login', usersRouter);
-app.use("/testAPI", testAPIRouter);
+app.use('/auth/login', loginRouter);
+app.use('/auth/createAccount', createAccountRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
