@@ -1,7 +1,14 @@
 import React from 'react';
 import {Navbar, Nav, Button} from 'react-bootstrap';
 
-class Header extends React.Component {
+
+type MyProps = {
+    role: string,
+    username: string
+};
+type MyState = {
+}
+class Header extends React.Component<MyProps, MyState> {
     CreateAdminLinksIfAllowed(){
         if (this.props.role === "admin"){
             return (<Nav.Link href="#admin">Admin</Nav.Link>)}

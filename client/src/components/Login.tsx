@@ -2,8 +2,23 @@ import React from 'react';
 import axios from 'axios';
 import {Button, Form, Jumbotron, Modal, Alert} from "react-bootstrap";
 
-class Login extends React.Component {
-    constructor(props) {
+
+type MyProps = {
+    //TODO: This props shouldn't be any, but it's a quick fix to work
+    App: any
+};
+type MyState = {
+    email: string,
+    username: string,
+    password: string,
+    showErrorModal: boolean,
+    showCreateAccountModal: boolean,
+    showAccountCreationError: boolean,
+    accountCreationErrorText: string,
+    showAccountCreationSuccess: boolean
+    };
+class Login extends React.Component<MyProps, MyState> {
+    constructor(props: any) {
         super(props);
 
         this.state = {
@@ -41,36 +56,36 @@ class Login extends React.Component {
         });
     }
 
-    changeInForm(e){
-        this.setState({
-            [e.target.name] : e.target.value
-        });
+    changeInForm(name: string, value: string){
+        this.setState((current) => ({...current,
+            [name] : value
+        }));
     }
 
 
-    submitLogIn(e){
+    submitLogIn(e: React.FormEvent<HTMLElement>){
         e.preventDefault();
         //TODO: Uses "then" should look into using async/await
         axios.post('http://localhost:9000/auth/login',{
-                email: this.state.email,
-                password: this.state.password
-            }).then(res => {
-                if(res.status === 200) {
-                    localStorage.setItem('jwt', res.data.accessToken)
-                    this.props.App.handleUserLogin.bind(this.props.App)({
-                        //TODO: Standardize if I'm using email, or username
-                        username:res.data.email,
-                        userRole: res.data.role
-                    })
-                }
-            }).catch(error => {
+            email: this.state.email,
+            password: this.state.password
+        }).then(res => {
+            if(res.status === 200) {
+                localStorage.setItem('jwt', res.data.accessToken)
+                this.props.App.handleUserLogin.bind(this.props.App)({
+                    //TODO: Standardize if I'm using email, or username
+                    username:res.data.email,
+                    userRole: res.data.role
+                })
+            }
+        }).catch(error => {
             if(error.response && error.response.status === 403){
                 this.handleErrorModalShow();
             }
         });
     }
 
-    submitCreateAccount(e){
+    submitCreateAccount(e: React.FormEvent<HTMLElement>){
         e.preventDefault()
         axios.put('http://localhost:9000/auth/createAccount',{
             email: this.state.email,
@@ -78,8 +93,8 @@ class Login extends React.Component {
             password: this.state.password
         }).then(res => {
             if(res.status === 200) {
-            //    Close modal and let user log in under new log
-            //    TODO: Make an boot strap alert on page letting them know user creation worked
+                //    Close modal and let user log in under new log
+                //    TODO: Make an boot strap alert on page letting them know user creation worked
                 this.setState({
                     showCreateAccountModal: false,
                     showAccountCreationSuccess: true
@@ -87,9 +102,8 @@ class Login extends React.Component {
 
             }
         }).catch(error => {
-            console.log(error.response)
             if(error.response && error.response.status === 409){
-            //    TODO: Add a "forgot password" button
+                //    TODO: Add a "forgot password" button
                 this.setState({
                     showAccountCreationError: true,
                     accountCreationErrorText: error.response.data
@@ -103,7 +117,7 @@ class Login extends React.Component {
         return (
 
             <div style={{height: '100vh',
-            backgroundColor: "#a1f9ff"}}>
+                backgroundColor: "#a1f9ff"}}>
                 {/*TODO: Make this into a CSS class and assign it there instead of here*/}
                 <div style={{  margin: '0',
                     position: 'absolute',
@@ -122,6 +136,7 @@ class Login extends React.Component {
                         </Modal.Header>
                         <Modal.Body>Please try again or create an account below</Modal.Body>
                         <Modal.Footer>
+                            {/*TODO: This Create Account button isn't working*/}
                             <Button variant="secondary" onClick={this.handleErrorModalClose.bind(this)}>
                                 Create Account
                             </Button>
@@ -146,7 +161,7 @@ class Login extends React.Component {
                                        onClose={() => {this.setState({
                                            showAccountCreationError: false
                                        })}}>
-                                        {this.state.accountCreationErrorText}
+                                    {this.state.accountCreationErrorText}
                                 </Alert>
                                 <Form.Label className="sr-only" htmlFor="accountCreationFormInputEmail">
                                     Email
@@ -157,7 +172,9 @@ class Login extends React.Component {
                                               className="form-control mb-2 mr-sm-2"
                                               id="accountCreationFormInputEmail"
                                               placeholder="First.Last@email.com"
-                                              onChange={e => this.changeInForm(e)}/>
+                                              onChange={e => {
+                                                  this.changeInForm(e.target.name, e.target.value);
+                                              }}/>
 
                                 <Form.Label className="sr-only" htmlFor="accountCreationFormInputUsername">
                                     Username
@@ -168,7 +185,9 @@ class Login extends React.Component {
                                               className="form-control mb-2 mr-sm-2"
                                               id="accountCreationFormInputUsername"
                                               placeholder="Username"
-                                              onChange={e => this.changeInForm(e)}/>
+                                              onChange={e => {
+                                                  this.changeInForm(e.target.name, e.target.value);
+                                              }}/>
 
                                 <Form.Label className="sr-only" htmlFor="accountCreationFormInputPassword">
                                     Password
@@ -179,7 +198,9 @@ class Login extends React.Component {
                                               className="form-control mb-2 mr-sm-2"
                                               id="accountCreationFormInputPassword"
                                               placeholder="Password"
-                                              onChange={e => this.changeInForm(e)}/>
+                                              onChange={e => {
+                                                  this.changeInForm(e.target.name, e.target.value);
+                                              }}/>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="primary" type="submit">
@@ -209,7 +230,9 @@ class Login extends React.Component {
                                           className="form-control mb-2 mr-sm-2"
                                           id="loginFormInputEmail"
                                           placeholder="Email"
-                                          onChange={e => this.changeInForm(e)}/>
+                                          onChange={e => {
+                                              this.changeInForm(e.target.name, e.target.value);
+                                          }}/>
 
                             <Form.Label className="sr-only" htmlFor="loginFormInputPassword">
                                 Username
@@ -219,7 +242,9 @@ class Login extends React.Component {
                                           className="form-control mb-2 mr-sm-2"
                                           id="loginFormInputPassword"
                                           placeholder="Password"
-                                          onChange={e => this.changeInForm(e)}/>
+                                          onChange={e => {
+                                              this.changeInForm(e.target.name, e.target.value);
+                                          }}/>
 
                             <Button variant="primary" type="submit" className="btn btn-primary mb-2">
                                 Submit
