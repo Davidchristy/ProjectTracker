@@ -11,6 +11,11 @@ type MyState = {
     showCardCreationError: boolean,
     cardCreationErrorText: string,
     tempListOfKanbans: string[]
+    title: string,
+    description: string,
+    cardType: string,
+    kanbanBoard: string,
+    minutesToCompletion: number
 };
 class CreateCardModal extends React.Component<MyProps, MyState> {
     constructor(props: any) {
@@ -18,30 +23,47 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
         this.state = {
             showCardCreationError: false,
             cardCreationErrorText: "",
-            tempListOfKanbans: this.getListOfKanbans()
+            tempListOfKanbans: this.getListOfKanbans(),
+            title: "",
+            description: "",
+            cardType: "Task",
+            kanbanBoard: "",
+            minutesToCompletion: 0
         };
-        console.log(this.state.tempListOfKanbans)
-
     }
 
+    changeInForm(name: string, value: string) {
+        console.log(name, value)
+        this.setState((current) => ({
+            ...current,
+            [name]: value
+        }));
+    }
+
+
     submit(e: React.FormEvent<HTMLElement>){
+
+        console.log(this.state.kanbanBoard);
         e.preventDefault();
+        //TODO: Do some validation stuff here, are any empty? HTML5 might do that...
         axios.put('http://localhost:9000/cards/createCard', {
-            title: null,
-            //TODO: Add this to form below
-            longFormDescription: null,
-            cardType: null,
-            kanbanBoard: null,
+            jwt: localStorage.getItem('jwt'),
+            title: this.state.title,
+            longFormDescription: this.state.description,
+            cardType: this.state.cardType,
+            kanbanBoard: this.state.kanbanBoard,
             itemsNeeded: [null],
-            timeToCompletion: null
+            //TODO Add this below
+            minutesToCompletion: 10
         }).then(response =>{
             // Success
+            this.props.App.handleShowHideCreateCardModal.bind(this.props.App)(false)
+        //    Popup box on bottom right should
 
         }, err =>{
             // Error
 
         })
-
     }
 
      getListOfKanbans(){
@@ -52,8 +74,9 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
             });
         };
         const success = () => {
+            //TODO: While building this out there will only be one board, but many boards will be possible in full product
             this.setState({
-                tempListOfKanbans: ["New1", "New2"]
+                tempListOfKanbans: ["", "ProjectBoard1", "ProjectBoard2"]
             })
         }
         function failure(){
@@ -66,7 +89,6 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
 
 
     render(){
-        console.log(this.state.tempListOfKanbans)
         return(
           <Modal
               show={this.props.App.state.showCreateCardModal}
@@ -76,7 +98,7 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
                   this.props.App.handleShowHideCreateCardModal.bind(this.props.App)(false)}}>
                   Create a new card
               </Modal.Header>
-              <Form>
+              <Form onSubmit={e=> {this.submit(e)}}>
                   <Modal.Body>
                       <Alert variant="danger"
                              show={this.state.showCardCreationError}
@@ -92,11 +114,12 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
                           Title
                       </Form.Label>
                       <span>Title:</span>
-                      <Form.Control name="Title"
+                      <Form.Control name="title"
                                     type="text"
                                     className="form-control mb-2 mr-sm-2"
                                     id="cardCreationFormInputTitle"
                                     placeholder="Title"
+                                    onChange={e => {this.changeInForm(e.target.name, e.target.value);}}
                       />
 
                       {/*    What type of card is this? */}
@@ -107,23 +130,42 @@ class CreateCardModal extends React.Component<MyProps, MyState> {
                       <Form.Control name="cardType"
                                     className="form-control mb-2 mr-sm-2"
                                     id="cardCreationFormInputType"
-                                    as="select" >
+                                    as="select"
+                                    onChange={e => {this.changeInForm(e.target.name, e.target.value);}}>
                           <option>Task</option>
                           <option>Bug</option>
                           <option>Feature</option>
                           <option>Project</option>
                       </Form.Control>
 
+                      {/* Description */}
+                      <Form.Label className="sr-only" htmlFor="cardCreationFormInputDescription">
+                          Description
+                      </Form.Label>
+                      <span>Description:</span>
+                      <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    name="description"
+                                    className="form-control mb-2 mr-sm-2"
+                                    id="cardCreationFormInputDescription"
+                                    placeholder="Description"
+                                    onChange={e => {this.changeInForm(e.target.name, e.target.value);}}
+                      />
+
                       {/*    Which Kanban board it goes on */}
                       {/* TODO: We might want one card on many boards, a task for later*/}
-                      <Form.Label className="sr-only" htmlFor="cardCreationFormInputType">
+                      <Form.Label className="sr-only" htmlFor="cardCreationFormInputKanbanBoard">
                           Kanban Board
                       </Form.Label>
                       <span>Kanban Board</span>
-                      <Form.Control name="kanbanBoard"
+                      <Form.Control
+                                    as="select"
+                                    name="kanbanBoard"
                                     className="form-control mb-2 mr-sm-2"
                                     id="cardCreationFormInputKanbanBoard"
-                                    as="select" >
+                                    onChange={(e) => {
+                                        this.changeInForm(e.target.name, e.target.value);}}>
 
                           {this.state.tempListOfKanbans.map(board => <option>{board}</option>)}
 

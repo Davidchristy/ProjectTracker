@@ -50,6 +50,7 @@ start somewhere. If you find this let me know what you think.
         * Micro view: Title, type (based on color of card?)
         * Collapsed View: A title, todo date (if applied), and first 100 chars of long description
         * Full View: Everything?
+    * Users can edit the cards after they are made
 
 * Upload Documents
 * Sprint Boards
@@ -59,6 +60,8 @@ start somewhere. If you find this let me know what you think.
 * Separate out necessary data with data that should be made
  by each user, so we can blow this out to allow other 
  instances to be made.
+* Popup box on bottom right should give warnings and errors 
+  and success messages all in one place. 
  
  * 404 Page
 

@@ -1,6 +1,7 @@
 const assert = require("assert");
 const mysql = require("mysql");
 let _db;
+
 module.exports = {
     getDb,
     initDb
