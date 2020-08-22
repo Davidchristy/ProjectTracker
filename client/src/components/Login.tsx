@@ -115,7 +115,6 @@ class Login extends React.Component<MyProps, MyState> {
 
     render() {
         return (
-
             <div style={{height: '100vh',
                 backgroundColor: "#a1f9ff"}}>
                 {/*TODO: Make this into a CSS class and assign it there instead of here*/}
@@ -152,6 +151,7 @@ class Login extends React.Component<MyProps, MyState> {
                         <Modal.Header closeButton onClick={this.handleCreateAccountModalClose.bind(this)}>
                             <Modal.Title>Create Account</Modal.Title>
                         </Modal.Header>
+                        {/*TODO: Do some sort of form validation before sending to server*/}
                         <Form onSubmit={e => this.submitCreateAccount(e)}>
                             <Modal.Body>
 

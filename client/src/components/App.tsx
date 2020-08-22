@@ -3,21 +3,24 @@ import '../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './Header'
 import Login from "./Login";
+import CreateCardModal from './CreateCardModal'
 import {Button} from "react-bootstrap";
 
 type MyProps = {
 };
 type MyState = {
   username: string,
-  userRole: string
+  userRole: string,
+  showCreateCardModal: boolean
 };
 class App extends React.Component<MyProps, MyState> {
   // TODO: I should stay away from typing things any like this, but will come back to it later
   constructor(props: any) {
     super(props);
     this.state = {
-      username: "",
-      userRole: ""
+      username: "David",
+      userRole: "admin",
+      showCreateCardModal: true
     };
   }
 
@@ -28,11 +31,13 @@ class App extends React.Component<MyProps, MyState> {
     })
   }
 
-  modifyState(changedState: {}){
+  //This needs to be in the parent of CreateCardsModal, which probably wont be here
+  handleShowHideCreateCardModal(show: boolean){
     this.setState((current) => ({...current,
-      changedState
+      showCreateCardModal: show
     }))
   }
+
 
   render() {
 
@@ -46,11 +51,11 @@ class App extends React.Component<MyProps, MyState> {
       return (
           <div>
             <Header username = {this.state.username} role = {this.state.userRole}/>
-            <Button onClick={()=>this.modifyState({showCreateCardModal: true})}>
+            <Button onClick={()=>{this.handleShowHideCreateCardModal(true)}}>
               Create Card
             </Button>
+            <CreateCardModal App = {this}/>
           </div>
-
       );
     }
   }
